@@ -19,40 +19,82 @@
             background: purple;
             color: white;
         }
+        .my_container{
+          width: calc(100% / 2 - 30px);
+          padding: 15px;
+          margin: 15px;
+          text-align: center;
+          display: inline-block;
+          background-color: rgba(27, 35, 99);
+        }
+        .disk{
+        }
+        h1{
+          color: black;
+        }
         img {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
         }
     </style>
-    <script>
-        function init() {
-            new Vue({
-                el: "#app",
-                data: {
-                  arrDisk:[],
-                },
-                mounted() {
-                    axios.get('data.php')
-                        .then(res => {
-                            const disks = res.data;
-                            this.arrDisks = disks;
-                            console.log(this.arrDisks);
-                        })
-                        .catch(e => {
-                            console.log(e);
-                        })
-                }
-            });
-        }
-        document.addEventListener("DOMContentLoaded",init);
-    </script>
     <title>PHP</title>
 </head>
-<body>
-    <div id="app" class="container">
-            <div v-for="disk in arrDisks"class="">
-                <h1>{{ disk.title }}</h1>
-                <img :src="" alt="">
-            </div>
-    </div>
+ <body>
+   <div id="app" class="disk">
+     <div class="">
+       <select v-model='genreIndex' @change='filterGenre' class="" name="">
+         <option v-for='(genere, index) in arrGenre' :value="index">{{ genere }}</option>
+       </select>
+     </div>
+     <div v-for="disk in arrDisks" class="my_container">
+         <h1>{{ disk.title }}</h1>
+         <h2>{{ disk.author }}</h2>
+         <img :src="disk.poster" alt="">
+         <h3>{{ disk.genre }}</h3>
+         <h4>{{ disk.year }}</h4>
+     </div>
+   </div>
+   <script>
+       function init() {
+           new Vue({
+               el: "#app",
+               data: {
+                 arrDisks:[],
+                 arrGenre:[],
+                 genreIndex: 0,
+               },
+               methods:{
+                 filterGenre : function(){
+                   const selectGenre = this.arrGenre[this.genreIndex];
+                   console.log(selectGenre);
+                   axios.get('data.php',{
+                     params:{
+                       genere: selectGenre,
+                     }
+                   })
+                   .then(res => {
+                     console.log(res);
+                     
+                   })
+                 }
+               },
+               mounted() {
+                   axios.get('data.php')
+                       .then(res => {
+                           // const disks = res.data;
+                           // console.log(this.arrDisks);
+                           // this.arrGenre = ;
+                           console.log(res.data);
+                           this.arrGenre = res.data.generi;
+                           this.arrDisks = res.data.disks;
+                       })
+                       .catch(e => {
+                           console.log(e);
+                       });
+                }
+           });
+       }
+       document.addEventListener("DOMContentLoaded",init);
+   </script>
+ </body>
 </html>

@@ -72,5 +72,15 @@
             "year" => "1987"
         ]
     ];
-    echo json_encode($db);
+    $generi = ['Rock', 'Jazz', 'Pop', 'Metal'];
+    $param = $_GET['genere'];
+    if ($param!=NULL) {
+      $resp = ;
+    } else {
+      $resp = [
+        'disks' => $db,
+        'generi' => $generi,
+      ];
+    }
+    echo json_encode($resp);
 ?>
